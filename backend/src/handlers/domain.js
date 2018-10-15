@@ -1,0 +1,4 @@
+const domainHandler = (req, res) => {
+
+}
+;
