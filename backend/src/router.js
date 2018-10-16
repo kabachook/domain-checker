@@ -1,6 +1,7 @@
 module.exports = class Router {
   constructor() {
     this.routes = {};
+    this.paramRegexp = /\{(.*)\}/;
   }
 
   /**

@@ -12,5 +12,8 @@
     },
     "engines": {
         "node": "10"
+    },
+    "dependencies": {
+        "express": "^4.16.4"
     }
 }

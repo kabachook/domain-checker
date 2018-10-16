@@ -9,10 +9,8 @@ https.get('https://data.iana.org/TLD/tlds-alpha-by-domain.txt', (res) => {
       tlds.push(d);
     }).on('end', () => {
       tlds = Buffer.concat(tlds).toString().split('\n');
-      tlds = tlds.slice(1);
-      // console.log(tlds);
+      tlds = tlds.slice(1, -1); // Cut first commend and last newline
       tlds = tlds.map(x => x.toLowerCase());
-      // console.log(tlds);
       fs.writeFile('tlds.json', JSON.stringify(tlds), () => console.log('Done writing'));
     });
   }
