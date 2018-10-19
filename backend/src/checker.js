@@ -23,7 +23,8 @@ const domainRegexp = /[a-z0-9]+.[a-z0-9]+/;
 const domainWhoisAvailable = [
   'NOT FOUND',
   'The queried object does not exist',
-  'No Data Found', 'No match for domain',
+  'No Data Found',
+  'No match for domain',
   'No entries found for the selected source(s).'
 ];
 
@@ -47,7 +48,7 @@ let whoisServers;
  * @returns {boolean} True if domain available, false if not.
  * @throws {Error} 'Undefined whois response' else.
  */
-const parseRawWhois = (data) => {
+const checkAvailability = data => {
   const foundAvailable = domainWhoisAvailable.some(el => data.indexOf(el) >= 0);
 
   if (foundAvailable) return true;
@@ -84,9 +85,11 @@ const checkDomain = (name, tld) => {
   if (domainRegexp.test(domain)) {
     console.log(`Calling ${whoisServers[tld]} for ${domain}`);
     try {
-      const response = parseRawWhois(execSync(`WHOIS_SERVER=${whoisServers[tld]} whois ${domain}`, {
-        timeout: WHOIS_TIMEOUT
-      }).toString());
+      const response = checkAvailability(
+        execSync(`WHOIS_SERVER=${whoisServers[tld]} whois ${domain}`, {
+          timeout: WHOIS_TIMEOUT
+        }).toString()
+      );
 
       return response;
     } catch (e) {
@@ -103,6 +106,6 @@ const checkDomain = (name, tld) => {
 };
 
 module.exports = {
-  parseRawWhois,
+  checkAvailability,
   checkDomain
 };

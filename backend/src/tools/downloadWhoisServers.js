@@ -12,10 +12,13 @@ https.get('https://www.nirsoft.net/whois-servers.txt', (res) => {
       whoisServersRaw.push(d);
     }).on('end', () => {
       whoisServersRaw = Buffer.concat(whoisServersRaw).toString().split('\n');
-      whoisServersRaw = whoisServersRaw.slice(5, -3); // Cut first comments and last newlines
-      whoisServersRaw = whoisServersRaw.map(x => x.split(' '));
-      whoisServersRaw.forEach(([tld, server]) => {
-        result[tld] = server;
+      // whoisServersRaw = whoisServersRaw.slice(5, -3); // Cut first comments and last newlines
+      whoisServersRaw.forEach(line => {
+        if (line.indexOf(';') !== 0 && line.indexOf('\n') !== 0) {
+          const [tld, server] = line.split(' ');
+
+          result[tld] = server;
+        }
       });
       fs.writeFile('whoisServers.json', JSON.stringify(result), () => console.log('Done writing'));
     });
