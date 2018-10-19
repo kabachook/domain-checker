@@ -2,13 +2,15 @@
     "name": "backend",
     "version": "0.0.1",
     "scripts": {
-        "start": "node src/"
+        "start": "node src/",
+        "dev": "nodemon src/"
     },
     "devDependencies": {
         "eslint": "^5.7.0",
-        "eslint-config-airbnb-base": "^13.1.0",
+        "eslint-config-codex": "github:codex-team/eslint-config",
         "eslint-plugin-import": "^2.14.0",
-        "eslint-plugin-security": "^1.4.0"
+        "eslint-plugin-security": "^1.4.0",
+        "nodemon": "^1.18.4"
     },
     "engines": {
         "node": "10"

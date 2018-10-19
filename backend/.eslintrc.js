@@ -1,9 +1,11 @@
 module.exports = {
-    "extends": "airbnb-base",
+    "extends": "codex",
     "plugins": [
         "security"
     ],
     "rules": {
-        "no-console": "off"
+        "no-console": "off",
+        "require-jsdoc": "error",
+        "valid-jsdoc": "error"
     }
 };
