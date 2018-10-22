@@ -73,30 +73,30 @@ const checkDomain = (name, tld) => {
   if (typeof whoisServers === 'undefined') {
     try {
       whoisServers = JSON.parse(fs.readFileSync(`${__dirname}/../whoisServers.json`, 'utf-8'));
-      // console.log(`Whois Servers:\n${whoisServers}`);
     } catch (e) {
       console.error(e);
       throw Error("Error while reading whois servers' file");
     }
   }
   const domain = `${name}.${tld}`;
-  // TODO: check for invalid domain like 'example something.com'
 
   if (domainRegexp.test(domain)) {
     console.log(`Calling ${whoisServers[tld]} for ${domain}`);
     try {
-      const response = checkAvailability(
-        execSync(`WHOIS_SERVER=${whoisServers[tld]} whois ${domain}`, {
-          timeout: WHOIS_TIMEOUT
-        }).toString()
-      );
+      // execSync(`WHOIS_SERVER=${whoisServers[tld]} whois ${domain}`, {
+      const rawRes = execSync(`whois ${domain}`, {
+        timeout: WHOIS_TIMEOUT
+      }).toString();
 
-      return response;
+      return checkAvailability(rawRes);
     } catch (e) {
       if (e.code === 'ETIMEDOUT') {
         throw Error('Whois timed out');
+      } else if (e.status === 1) {
+        // Strange bug in whois for .com domains: it returns 1 code instead of 0, so node throws an exception
+        return checkAvailability(e.stdout.toString());
       } else {
-        console.log(e.stderr.toString());
+        console.log(e.stdout.toString());
         console.log(e.error);
         throw e;
       }
