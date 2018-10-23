@@ -6,7 +6,7 @@ const {
   checkDomain
 } = require('../checker');
 
-const jsonParseAsync = promisify(JSON.parse);
+// const jsonParseAsync = promisify(JSON.parse);
 
 // TODO: load once and update at the runtime
 // const tlds = JSON.parse(fs.readFileSync(`${__dirname}/../../tlds.json`, 'utf-8'));
@@ -18,7 +18,7 @@ const domainHandler = async (req, res) => {
   const result = {};
 
   try {
-    const tlds = await jsonParseAsync(fs.readFileSync(`${__dirname}/../../tlds.json`, 'utf-8'));
+    const tlds = await JSON.parse(fs.readFileSync(`${__dirname}/../../tlds.json`, 'utf-8'));
 
     // tlds.forEach((tld) => {
     //   try {
@@ -70,7 +70,7 @@ const domainHandler = async (req, res) => {
       res.status(200).json(result);
     });
   } catch (e) {
-    console.error(e);
+    console.error(e.error);
     res.status(500).json({
       'error': 'Internal server error'
     });

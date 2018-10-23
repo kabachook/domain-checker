@@ -83,7 +83,7 @@ const checkDomain = async (name, tld) => {
   const domain = `${name}.${tld}`;
 
   if (domainRegexp.test(domain)) {
-    console.log(`Calling ${whoisServers[tld]} for ${domain}`);
+    // console.log(`Calling ${whoisServers[tld]} for ${domain}`);
     try {
       // execSync(`WHOIS_SERVER=${whoisServers[tld]} whois ${domain}`, {
       const {
