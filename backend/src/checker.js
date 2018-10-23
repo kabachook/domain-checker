@@ -2,6 +2,8 @@ const {
   execSync
 } = require('child_process');
 const fs = require('fs');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 /**
  * Whois request timeout.
@@ -69,26 +71,28 @@ const checkAvailability = data => {
  *                 'Invalid domain' if domain is invalid,
  *                  raw execSync Error otherwise.
  */
-const checkDomain = (name, tld) => {
-  if (typeof whoisServers === 'undefined') {
-    try {
-      whoisServers = JSON.parse(fs.readFileSync(`${__dirname}/../whoisServers.json`, 'utf-8'));
-    } catch (e) {
-      console.error(e);
-      throw Error("Error while reading whois servers' file");
-    }
-  }
+const checkDomain = async (name, tld) => {
+  // if (typeof whoisServers === 'undefined') {
+  //   try {
+  //     whoisServers = JSON.parse(fs.readFileSync(`${__dirname}/../whoisServers.json`, 'utf-8'));
+  //   } catch (e) {
+  //     console.error(e);
+  //     throw Error("Error while reading whois servers' file");
+  //   }
+  // }
   const domain = `${name}.${tld}`;
 
   if (domainRegexp.test(domain)) {
     console.log(`Calling ${whoisServers[tld]} for ${domain}`);
     try {
       // execSync(`WHOIS_SERVER=${whoisServers[tld]} whois ${domain}`, {
-      const rawRes = execSync(`whois ${domain}`, {
+      const {
+        stdout: rawRes
+      } = await exec(`whois ${domain}`, {
         timeout: WHOIS_TIMEOUT
-      }).toString();
+      });
 
-      return checkAvailability(rawRes);
+      return checkAvailability(rawRes.toString());
     } catch (e) {
       if (e.code === 'ETIMEDOUT') {
         throw Error('Whois timed out');
