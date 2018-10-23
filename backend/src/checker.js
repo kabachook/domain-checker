@@ -1,7 +1,3 @@
-const {
-  execSync
-} = require('child_process');
-const fs = require('fs');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
@@ -38,11 +34,6 @@ const domainWhoisNotAvailable = [
   'Domain Name:',
   'domain:'
 ];
-
-/**
- * Object where key is TLD and value is whois server corresponding to this TLD. Used to send whois requests.
- */
-let whoisServers;
 
 /**
  * Parses given whois response to check availability.
