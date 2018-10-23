@@ -72,20 +72,10 @@ const checkAvailability = data => {
  *                  raw execSync Error otherwise.
  */
 const checkDomain = async (name, tld) => {
-  // if (typeof whoisServers === 'undefined') {
-  //   try {
-  //     whoisServers = JSON.parse(fs.readFileSync(`${__dirname}/../whoisServers.json`, 'utf-8'));
-  //   } catch (e) {
-  //     console.error(e);
-  //     throw Error("Error while reading whois servers' file");
-  //   }
-  // }
   const domain = `${name}.${tld}`;
 
   if (domainRegexp.test(domain)) {
-    // console.log(`Calling ${whoisServers[tld]} for ${domain}`);
     try {
-      // execSync(`WHOIS_SERVER=${whoisServers[tld]} whois ${domain}`, {
       const {
         stdout: rawRes
       } = await exec(`whois ${domain}`, {
