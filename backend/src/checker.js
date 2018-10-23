@@ -9,12 +9,6 @@ const exec = util.promisify(require('child_process').exec);
 const WHOIS_TIMEOUT = process.env.WHOIS_TIMEOUT || 2000;
 
 /**
- * Regexp to check if domain is valid.
- * @const {RegExp}
- */
-const domainRegexp = /[a-z0-9]+.[a-z0-9]+/;
-
-/**
  * Array of strings which occur in whois response if domain is available(not found).
  * @const {string[]}
  */
@@ -63,6 +57,12 @@ const checkAvailability = data => {
  *                  raw execSync Error otherwise.
  */
 const checkDomain = async (name, tld) => {
+  /**
+   * Regexp to check if domain is valid.
+   * @const {RegExp}
+   */
+  const domainRegexp = /[a-z0-9]+.[a-z0-9]+/;
+
   const domain = `${name}.${tld}`;
 
   if (domainRegexp.test(domain)) {
