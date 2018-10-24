@@ -3,7 +3,9 @@
 - [x] Simple http router
 - [x] Add params extraction to router (i.e. `/{id}` or `/:id`)
 - [x] Update linter config
-- [ ] Promisify all the code
+- [x] Promisify all the code
+- [ ] Some queue(ZeroMQ, etc)
+- [ ] Caching (Websocket, etc)
 - [ ] Store tlds and whois servers in memory and update them
 - [ ] `child_process.exec()` security concern
 - [ ] Punycode converter

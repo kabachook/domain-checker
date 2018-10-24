@@ -61,7 +61,7 @@ const checkDomain = async (name, tld) => {
    * Regexp to check if domain is valid.
    * @const {RegExp}
    */
-  const domainRegexp = /[a-z0-9]+.[a-z0-9]+/;
+  const domainRegexp = /[a-z0-9]+\.[a-z0-9]+/;
 
   const domain = `${name}.${tld}`;
 
