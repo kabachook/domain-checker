@@ -21,7 +21,7 @@ const processQuery = async (domain) => {
   const searchElement = document.querySelector(SEARCH_INPUT);
 
   for (let [tld, data] of Object.entries(resp)) {
-    if (Object.keys(data).indexOf('available') !== -1 && data['available'] === true) {
+    if (data.available === true) {
       let child = document.createElement('div');
 
       child.innerHTML = `${searchElement.value}.${tld}`;
