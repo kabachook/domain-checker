@@ -33,7 +33,7 @@ const processQuery = async (domain) => {
   return true;
 };
 
-onload = _ => {
+onload = () => {
   document.querySelector('input#search-input').oninput = function processSearchBar(event) {
     console.log('oninput called');
     let eventTime = Date.now();
