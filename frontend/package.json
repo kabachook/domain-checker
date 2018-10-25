@@ -1,0 +1,8 @@
+{
+    "name": "frontend",
+    "version": "0.0.1",
+    "devDependencies": {
+        "eslint": "^5.7.0",
+        "eslint-config-codex": "github:codex-team/eslint-config"
+    }
+}
