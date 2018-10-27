@@ -8,6 +8,7 @@
 - [x] Check for invalid domain
 - [ ] Caching (Websocket, etc)
 - [ ] Replace my own whois func with whois from npm
+- [ ] Set up PM2 for workers and main handler
 - [ ] `child_process.exec()` security concern
 - [ ] Store tlds and whois servers in memory and update them
 - [ ] Punycode converter
