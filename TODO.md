@@ -4,12 +4,13 @@
 - [x] Add params extraction to router (i.e. `/{id}` or `/:id`)
 - [x] Update linter config
 - [x] Promisify all the code
-- [ ] Some queue(ZeroMQ, etc)
+- [x] Some queue(ZeroMQ, etc)
+- [x] Check for invalid domain
 - [ ] Caching (Websocket, etc)
-- [ ] Store tlds and whois servers in memory and update them
+- [ ] Replace my own whois func with whois from npm
 - [ ] `child_process.exec()` security concern
+- [ ] Store tlds and whois servers in memory and update them
 - [ ] Punycode converter
-- [ ] [Check for invalid domain](src/utils.js#L34)
 - [ ] Proper punycode domain check (i.e. `привет.рф`)
 
 ## Some difficulties
