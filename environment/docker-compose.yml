@@ -2,7 +2,9 @@ version: "3"
 
 services:
   backend:
-    build: backend/
+    build:
+      context: ../backend/
+      dockerfile: $PWD/backend/Dockerfile
     environment:
       - HOST=0.0.0.0
 
@@ -10,6 +12,6 @@ services:
     image: nginx:alpine
     volumes:
       - $PWD/nginx.conf:/etc/nginx/nginx.conf:ro
-      - $PWD/frontend/src:/usr/share/nginx/html:ro
+      - $PWD/../frontend/src:/usr/share/nginx/html:ro
     ports:
       - 3000:80
