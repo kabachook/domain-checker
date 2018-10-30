@@ -20,10 +20,11 @@ const CONFIG = {
  * Callback for `whois` msg type.
  * @param {string} name Domain name.
  * @param {string} tld TLD.
- * @param {RedisClient} redisClient Redis client. 
+ * @param {RedisClient} redisClient Redis client.
+ * @returns {void}
  */
 const whoisCallback = async (name, tld, redisClient) => {
-  let result = {}
+  let result = {};
   let queueResponse = new Queue(`response:${name}`, CONFIG, redisClient);
 
   queueResponse.on('error', (err) => {
@@ -32,20 +33,20 @@ const whoisCallback = async (name, tld, redisClient) => {
 
   try {
     const available = await checkDomain(name, tld);
+
     result = {
       tld,
       available
-    }
+    };
   } catch (err) {
     result = {
       tld,
       error: err.toString()
-    }
+    };
   }
 
   await queueResponse.sendMessage(result);
-  queueResponse.quit();
-}
+};
 
 /**
  * Functions to be called when received msg.
@@ -53,7 +54,6 @@ const whoisCallback = async (name, tld, redisClient) => {
 const CALLBACKES = {
   'whois': whoisCallback
 };
-
 
 /**
  * Redis clienr. Only one to make less connections.
@@ -71,20 +71,21 @@ queueWhois.on('error', (err) => {
 
 /**
  * Main worker loop.
+ * @returns {void}
  */
 const main = async () => {
   while (true) {
     try {
       const msg = await queueWhois.receiveMessage();
-      if (typeof (msg) === 'undefined') {
+
+      if (!msg) {
         continue;
       }
       CALLBACKES[msg.type](...msg.args, client);
-
     } catch (err) {
       console.error(err);
     }
   }
-}
+};
 
 main();

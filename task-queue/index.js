@@ -81,7 +81,6 @@ class Queue extends EventEmitter {
    * @returns {void}
    */
   async sendMessage(msg) {
-    // if (this.connected) {
     if (typeof msg !== 'object' && typeof msg !== 'string') {
       this._handleError('Wrong message type.');
       return;
@@ -91,20 +90,16 @@ class Queue extends EventEmitter {
       return;
     }
     this._lpush(this.queueName, msg);
-    // } else {
-    // this._handleError('Not connected to the database.');
-    // }
   }
   /**
    * Wait for message.
    * @returns{object} Jsoned message.
    */
   async receiveMessage() {
-    // if (this.connected) {
     try {
       const packed = await this._brpop(this.queueName, this.timeout);
 
-      if (typeof (packed) === 'undefined' || typeof (packed) === typeof (null)) {
+      if (!packed) {
         return undefined;
       }
       const msg = JSON.parse(packed[1]);
@@ -113,9 +108,6 @@ class Queue extends EventEmitter {
     } catch (err) {
       this._handleError(err);
     }
-    // } else {
-    // this._handleError('Not connected to the database.');
-    // }
   }
 
   /**
