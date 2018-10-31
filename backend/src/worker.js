@@ -51,7 +51,7 @@ const whoisCallback = async (name, tld, redisClient) => {
 /**
  * Functions to be called when received msg.
  */
-const CALLBACKES = {
+const CALLBACKS = {
   'whois': whoisCallback
 };
 
@@ -81,7 +81,7 @@ const main = async () => {
       if (!msg) {
         continue;
       }
-      CALLBACKES[msg.type](...msg.args, client);
+      CALLBACKS[msg.type](...msg.args, client);
     } catch (err) {
       console.error(err);
     }
