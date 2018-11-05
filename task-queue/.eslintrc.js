@@ -6,6 +6,7 @@ module.exports = {
         "valid-jsdoc": "error"
     },
     "env": {
-        "browser": "true"
+        "browser": "true",
+        "mocha": "true"
     }
 };
