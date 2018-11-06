@@ -1,31 +1,35 @@
-const redis = require('redis');
+const Redis = require('ioredis');
 const {
-  Queue
+  RedisQueue
 } = require('task-queue');
 const {
   checkDomain
-} = require('./checker');
+} = require('../checker');
 
 /**
  * Config for Queue and RedisClient.
  */
-const CONFIG = {
-  host: process.env.REDIS_HOST || '127.0.0.1',
-  port: process.env.REDIS_PORT || 6379,
-  prefix: process.env.REDIS_PREFIX || 'queue:',
-  timeout: process.env.TIMEOUT || 1
-};
+const REDIS_URL = 'redis://127.0.0.1:6379';
+const QUEUE_RESPONSE_PREFIX = 'queue_response:';
+const QUEUE_WHOIS_PREFIX = 'queue:';
+const QUEUE_TIMEOUT = 3;
 
 /**
  * Callback for `whois` msg type.
  * @param {string} name Domain name.
  * @param {string} tld TLD.
+ * @param {string} id Unique request id.
  * @param {RedisClient} redisClient Redis client.
  * @returns {void}
  */
-const whoisCallback = async (name, tld, redisClient) => {
+const whoisCallback = async (name, tld, id, redisClient) => {
   let result = {};
-  let queueResponse = new Queue(`response:${name}`, CONFIG, redisClient);
+  let queueResponse = new RedisQueue({
+    queueName: id,
+    prefix: QUEUE_RESPONSE_PREFIX,
+    timeout: QUEUE_TIMEOUT,
+    redisClient
+  });
 
   queueResponse.on('error', (err) => {
     console.error(err);
@@ -56,14 +60,19 @@ const CALLBACKS = {
 };
 
 /**
- * Redis clienr. Only one to make less connections.
+ * Redis client. Only one to make less connections.
  */
-const client = redis.createClient(CONFIG);
+const client = new Redis(REDIS_URL);
 
 /**
  * Message receive queue.
  */
-let queueWhois = new Queue('whois', CONFIG, client);
+let queueWhois = new RedisQueue({
+  queueName: 'whois',
+  prefix: QUEUE_WHOIS_PREFIX,
+  timeout: QUEUE_TIMEOUT,
+  redisClient: client
+});
 
 queueWhois.on('error', (err) => {
   console.error(err);
@@ -81,7 +90,10 @@ const main = async () => {
       if (!msg) {
         continue;
       }
-      CALLBACKS[msg.type](...msg.args, client);
+
+      console.log(`Got task ${JSON.stringify(msg, null, 2)}\n`);
+
+      CALLBACKS[msg.type](...msg.args, msg.id, client);
     } catch (err) {
       console.error(err);
     }

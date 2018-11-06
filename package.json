@@ -1,4 +1,5 @@
 {
+    "name": "domain-checker",
     "private": true,
     "workspaces": [
         "backend",

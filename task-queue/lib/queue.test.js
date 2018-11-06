@@ -1,6 +1,10 @@
-const {expect} = require('chai');
+const {
+  expect
+} = require('chai');
 const Redis = require('ioredis');
-const {RedisQueue} = require('./queue');
+const {
+  RedisQueue
+} = require('./queue');
 
 const REDIS_URL = 'redis://127.0.0.1:6379';
 const QUEUE_NAME = 'test';
@@ -19,12 +23,18 @@ describe('Queue', () => {
     args: [
       'test',
       'io'
-    ]};
+    ]
+  };
   let queue;
 
   before(() => {
     db = new Redis(REDIS_URL);
-    queue = new RedisQueue(QUEUE_NAME, QUEUE_PREFIX, QUEUE_TIMEOUT, QUEUE_REDIS_CONFIG);
+    queue = new RedisQueue({
+      queueName: QUEUE_NAME,
+      prefix: QUEUE_PREFIX,
+      timeput: QUEUE_TIMEOUT,
+      redisConfig: QUEUE_REDIS_CONFIG
+    });
   });
 
   after(() => {

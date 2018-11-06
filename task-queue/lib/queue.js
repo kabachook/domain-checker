@@ -1,5 +1,7 @@
 const EventEmitter = require('events');
-const { promisify } = require('util');
+const {
+  promisify
+} = require('util');
 const Redis = require('ioredis');
 
 /**
@@ -104,12 +106,19 @@ class RedisQueue extends Queue {
    * @param {Parser} [parser=JsonParser] Message parser.
    * @param {Redis} [redisClient] ioredis' client. If present used instead of creatting a new one.
    */
-  constructor(queueName, prefix = 'queue:', timeout = 30, redisConfig = {
-    host: '127.0.0.1',
-    port: 6379,
-    password: null,
-    db: 0
-  }, parser = JsonParser, redisClient = null) {
+  constructor({
+    queueName,
+    prefix = 'queue:',
+    timeout = 30,
+    redisConfig = {
+      host: '127.0.0.1',
+      port: 6379,
+      password: null,
+      db: 0
+    },
+    parser = JsonParser,
+    redisClient = null
+  }) {
     super(queueName);
     this.prefix = prefix;
     this._fullName = prefix + queueName;
@@ -151,6 +160,10 @@ class RedisQueue extends Queue {
     try {
       const received = await this.dbClient.brpop(this._fullName, this.timeout);
 
+      if (!received) {
+        return null;
+      }
+
       return this.parser.parse(received);
     } catch (e) {
       throw this._handleError(e);
@@ -183,5 +196,6 @@ class RedisQueue extends Queue {
 }
 
 module.exports = {
-  RedisQueue, JsonParser
+  RedisQueue,
+  JsonParser
 };
