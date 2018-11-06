@@ -1,40 +1,38 @@
-(function(){
+(function () {
+  const SEARCH_THRESHOLD = 1000;
+  const API_URI = 'http://localhost:3000';
+  const DOMAIN_ENDPOINT = API_URI + '/domain/';
+  const ID_RESULTS_DIV = 'results';
+  const ID_SEARCH_INPUT = 'search-input';
 
-const SEARCH_THRESHOLD = 1000;
-const API_URI = 'http://localhost:3000';
-const DOMAIN_ENDPOINT = API_URI + '/domain/';
-const ID_RESULTS_DIV = 'results';
-const ID_SEARCH_INPUT = 'search-input';
+  let searchInputTime = Date.now();
+  let shouldSearch = false;
 
-let searchInputTime = Date.now();
-let shouldSearch = false;
+  const searchDomain = async (domain) => {
+    const response = await fetch(DOMAIN_ENDPOINT + domain);
 
-const searchDomain = async (domain) => {
-  const response = await fetch(DOMAIN_ENDPOINT + domain);
+    return response.json();
+  };
 
-  return response.json();
-};
+  const processQuery = async (domain) => {
+    const resp = await searchDomain(domain);
 
-const processQuery = async (domain) => {
-  const resp = await searchDomain(domain);
+    const resultElement = document.getElementById(ID_RESULTS_DIV);
+    const searchElement = document.getElementById(ID_SEARCH_INPUT);
 
-  const resultElement = document.getElementById(ID_RESULTS_DIV);
-  const searchElement = document.getElementById(ID_SEARCH_INPUT);
+    for (let [tld, data] of Object.entries(resp)) {
+      if (data.available === true) {
+        let child = document.createElement('div');
 
-  for (let [tld, data] of Object.entries(resp)) {
-    if (data.available === true) {
-      let child = document.createElement('div');
+        child.innerHTML = `${searchElement.value}.${tld}`;
 
-      child.innerHTML = `${searchElement.value}.${tld}`;
-
-      resultElement.appendChild(child);
+        resultElement.appendChild(child);
+      }
     }
-  }
-  return true;
-};
+    return true;
+  };
 
-onload = () => {
-  document.getElementById(ID_SEARCH_INPUT).addEventListener('input', (event) => {
+  document.getElementById(ID_SEARCH_INPUT).addEventListener('input', () => {
     let eventTime = Date.now();
 
     searchInputTime = eventTime;
@@ -54,5 +52,4 @@ onload = () => {
       }
     }
   }, 250);
-};
 })();
