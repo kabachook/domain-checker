@@ -6,10 +6,7 @@ body {
 }
 
 body {
-    padding: 8px;
-}
-
-.container {
+    margin: 8px;
     min-height: calc(100vh - 2*3px - 2*8px);
     border: 3px solid pink;
     display: flex;
