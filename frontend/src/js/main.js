@@ -1,5 +1,7 @@
+(function(){
+
 const SEARCH_THRESHOLD = 1000;
-const API_URI = '';
+const API_URI = 'http://localhost:3000';
 const DOMAIN_ENDPOINT = API_URI + '/domain/';
 const ID_RESULTS_DIV = 'results';
 const ID_SEARCH_INPUT = 'search-input';
@@ -53,3 +55,4 @@ onload = () => {
     }
   }, 250);
 };
+})();
