@@ -1,3 +1,4 @@
+const path = require('path');
 const process = require('process');
 const express = require('express');
 const rootHandler = require('./handlers/root');
@@ -8,7 +9,12 @@ const port = process.env.PORT || 3000;
 
 const server = express();
 
-server.get('/', rootHandler);
+if (process.env.NODE_ENV === 'dev') {
+  server.use(express.static(path.join(__dirname, '../../frontend/src')));
+} else {
+  server.get('/', rootHandler);
+}
+
 server.get('/domain/:domain', domainHandler);
 
 server.listen(port, hostname, () => {
