@@ -1,11 +1,9 @@
 (function () {
-  const SEARCH_THRESHOLD = 1000;
   const API_URI = 'http://localhost:3000';
   const DOMAIN_ENDPOINT = API_URI + '/domain/';
   const ID_RESULTS_DIV = 'results';
   const ID_SEARCH_INPUT = 'search-input';
 
-  let searchInputTime = Date.now();
   let shouldSearch = false;
 
   const searchDomain = async (domain) => {
@@ -32,18 +30,22 @@
     return true;
   };
 
-  document.getElementById(ID_SEARCH_INPUT).addEventListener('input', () => {
-    let eventTime = Date.now();
+  const debounce = (func, delay) => {
+    let inDebounce;
 
-    searchInputTime = eventTime;
-    shouldSearch = true;
-  });
+    return function () {
+      const context = this;
+      const args = arguments;
 
-  setInterval(async () => {
+      clearTimeout(inDebounce);
+      inDebounce = setTimeout(() => func.apply(context, args), delay);
+    };
+  };
+
+  const handler = async () => {
     const searchBarElement = document.getElementById(ID_SEARCH_INPUT);
-    let currentTime = Date.now();
 
-    if (shouldSearch && (currentTime - searchInputTime >= SEARCH_THRESHOLD) && searchBarElement.value !== '') {
+    if (shouldSearch && searchBarElement.value !== '') {
       shouldSearch = false;
       try {
         await processQuery(searchBarElement.value);
@@ -51,5 +53,10 @@
         console.error(`Failed to get data\n${e}`);
       }
     }
-  }, 250);
+  };
+
+  document.getElementById(ID_SEARCH_INPUT).oninput = () => {
+    shouldSearch = true;
+    debounce(handler, 1000)();
+  };
 })();
